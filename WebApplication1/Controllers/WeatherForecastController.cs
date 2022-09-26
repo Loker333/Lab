@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Contracts;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -7,33 +8,26 @@ using System.Threading.Tasks;
 
 namespace WebApplication1.Controllers
 {
-    [ApiController]
     [Route("[controller]")]
+    [ApiController]
     public class WeatherForecastController : ControllerBase
     {
-        private static readonly string[] Summaries = new[]
+        private ILoggerManager _logger;
+        public WeatherForecastController(ILoggerManager logger)
         {
-            "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-        };
-
-        private readonly ILogger<WeatherForecastController> _logger;
-
-        public WeatherForecastController(ILogger<WeatherForecastController> logger)
-        {
-            _logger = logger;
+        _logger = logger;
         }
-
         [HttpGet]
-        public IEnumerable<WeatherForecast> Get()
+        public IEnumerable<string> Get()
         {
-            var rng = new Random();
-            return Enumerable.Range(1, 5).Select(index => new WeatherForecast
-            {
-                Date = DateTime.Now.AddDays(index),
-                TemperatureC = rng.Next(-20, 55),
-                Summary = Summaries[rng.Next(Summaries.Length)]
-            })
-            .ToArray();
+            _logger.LogInfo("Вот информационное сообщение от нашего контроллера значений.");
+           
+            _logger.LogDebug("Вот отладочное сообщение от нашего контроллера значений.");
+           
+            _logger.LogWarn("Вот сообщение предупреждения от нашего контроллера значений.");
+           
+            _logger.LogError("Вот сообщение об ошибке от нашего контроллера значений.");
+        return new string[] { "value1", "value2" };
         }
     }
 }
