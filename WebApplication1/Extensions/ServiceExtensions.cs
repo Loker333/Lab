@@ -32,5 +32,8 @@ namespace WebApplication1.Extensions
         services.AddDbContext<RepositoryContext>(opts =>
         opts.UseSqlServer(configuration.GetConnectionString("sqlConnection"), b =>
         b.MigrationsAssembly("WebApplication1")));
+
+        public static void ConfigureRepositoryManager(this IServiceCollection services)=>
+        services.AddScoped<IRepositoryManager, RepositoryManager>();
     }
 }
