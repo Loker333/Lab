@@ -1,7 +1,6 @@
-﻿using Entities.Models;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using Entities.Configuration;
+using Entities.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace Entities
 {
@@ -15,14 +14,14 @@ namespace Entities
         {
             modelBuilder.ApplyConfiguration(new CompanyConfiguration());
             modelBuilder.ApplyConfiguration(new EmployeeConfiguration());
+            modelBuilder.ApplyConfiguration(new PizzeriaConfiguration());
+            modelBuilder.ApplyConfiguration(new MenuConfiguration());
         }
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            modelBuilder.ApplyConfiguration(new CompanyConfiguration());
-            modelBuilder.ApplyConfiguration(new EmployeeConfiguration());
-        }
         public DbSet<Company> Companies { get; set; }
         public DbSet<Employee> Employees { get; set; }
+        public DbSet<Pizzeria> Pizzerias { get; set; }
+        public DbSet<Menu> Menus { get; set; }
+
     }
 }
