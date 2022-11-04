@@ -7,9 +7,9 @@ using System.Text;
 
 namespace Repository
 {
-    public class EmployeeRepository : RepositoryBase<Employee>, IEmployeeRepository
+    public class PizzeriaRepository : RepositoryBase<Pizzeria>, IPizzeriaRepository
     {
-        public EmployeeRepository(RepositoryContext repositoryContext)
+        public PizzeriaRepository(RepositoryContext repositoryContext)
         : base(repositoryContext)
         {
         }

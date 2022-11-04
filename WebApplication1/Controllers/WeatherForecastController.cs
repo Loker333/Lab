@@ -29,5 +29,6 @@ namespace WebApplication1.Controllers
             _logger.LogError("Вот сообщение об ошибке от нашего контроллера значений.");
         return new string[] { "value1", "value2" };
         }
+
     }
 }

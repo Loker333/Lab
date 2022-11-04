@@ -9,6 +9,10 @@ namespace Entities
         public RepositoryContext(DbContextOptions options) : base(options)
         {
         }
+        public DbSet<Company> Companies { get; set; }
+        public DbSet<Employee> Employees { get; set; }
+        public DbSet<Pizzeria> Pizzerias { get; set; }
+        public DbSet<Menu> Menus { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -18,10 +22,7 @@ namespace Entities
             modelBuilder.ApplyConfiguration(new MenuConfiguration());
         }
 
-        public DbSet<Company> Companies { get; set; }
-        public DbSet<Employee> Employees { get; set; }
-        public DbSet<Pizzeria> Pizzerias { get; set; }
-        public DbSet<Menu> Menus { get; set; }
+
 
     }
 }

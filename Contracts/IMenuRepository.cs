@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Contracts
 {
-    public interface IPizzariaRepository
+    public interface IMenuRepository
     {
     }
 }

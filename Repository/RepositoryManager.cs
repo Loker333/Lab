@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Contracts;
+using Entities;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -9,6 +11,8 @@ namespace Repository
         private RepositoryContext _repositoryContext;
         private ICompanyRepository _companyRepository;
         private IEmployeeRepository _employeeRepository;
+        private IPizzeriaRepository _pizzeriaRepository;
+        private IMenuRepository _menuRepository;
         public RepositoryManager(RepositoryContext repositoryContext)
         {
             _repositoryContext = repositoryContext;
@@ -31,24 +35,26 @@ namespace Repository
                 return _employeeRepository;
             }
         }
-        public void Save() => _repositoryContext.SaveChanges();
-
-        [Route("[controller]")]
-        [ApiController]
-        public class WeatherForecastController : ControllerBase
+        public IPizzeriaRepository Pizzeria
         {
-            private readonly IRepositoryManager _repository;
-            public WeatherForecastController(IRepositoryManager repository)
+            get
             {
-                _repository = repository;
-            }
-            [HttpGet]
-            public ActionResult<IEnumerable<string>> Get()
-            {
-                _repository.Company.AnyMethodFromCompanyRepository();
-                _repository.Employee.AnyMethodFromEmployeeRepository();
-                return new string[] { "value1", "value2" };
+                if (_pizzeriaRepository == null)
+                    _pizzeriaRepository = new PizzeriaRepository(_repositoryContext);
+                return _pizzeriaRepository;
             }
         }
+        public IMenuRepository Menu
+        {
+            get
+            {
+                if (_menuRepository == null)
+                    _menuRepository = new MenuRepository(_repositoryContext);
+                return _menuRepository;
+            }
+        }
+        public void Save() => _repositoryContext.SaveChanges();
+
+
     }
 }

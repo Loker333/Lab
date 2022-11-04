@@ -1,13 +1,13 @@
 ﻿using Entities.Models;
-using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using System;
 
 namespace Entities.Configuration
 {
     public class PizzeriaConfiguration : IEntityTypeConfiguration<Pizzeria>
     {
-        public void Configure(EntityTypeBuilder<Pizzeria>builder)
+        public void Configure(EntityTypeBuilder<Pizzeria> builder)
         {
             builder.HasData
             (
@@ -17,7 +17,8 @@ namespace Entities.Configuration
                     Name = "Lora della Pizza",
                     Address = "Ульянова 78"
                 }
-            )
+            );
         }
     }
+
 }
