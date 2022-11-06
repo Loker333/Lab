@@ -16,6 +16,7 @@ namespace Entities.Models
         [Column("Адрес")]
         [Required(ErrorMessage = "Это поле является обязательным")]
         public string Address { get; set; }
+        public string Country { get; set; }
         public ICollection<Menu> Menus { get; set; }
     }
 }

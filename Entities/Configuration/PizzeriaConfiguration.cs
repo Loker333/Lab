@@ -15,7 +15,8 @@ namespace Entities.Configuration
                 {
                     Id = new Guid("151b32c7-2e1a-4626-91de-7f1375b0fd9f"),
                     Name = "Lora della Pizza",
-                    Address = "Ульянова 78"
+                    Address = "Ульянова 78",
+                    Country = "Россия"
                 }
             );
         }
