@@ -14,6 +14,10 @@ using System.Threading.Tasks;
 using WebApplication1.Extensions;
 using NLog;
 using System.IO;
+using AutoMapper;
+using Entities.Models;
+using Entities;
+using Contracts;
 
 namespace WebApplication1
 {
@@ -36,18 +40,40 @@ namespace WebApplication1
             services.ConfigureLoggerService();
             services.ConfigureSqlContext(Configuration);
             services.ConfigureRepositoryManager();
+            services.AddAutoMapper(typeof(Startup));
             services.AddControllers();
+            
+        }
 
+        public class MappingProfile : Profile
+        {
+            public MappingProfile()
+            {
+                CreateMap<Company, CompanyDto>()
+                .ForMember(c => c.FullAddress,
+                opt => opt.MapFrom(x => string.Join(' ', x.Address, x.Country)));
+            }
+        }
+
+        public class DisplayingProfile : Profile
+        {
+            public DisplayingProfile()
+            {
+                CreateMap<Pizzeria, PizzeriaDto>()
+                .ForMember(c => c.FullAddress,
+                opt => opt.MapFrom(x => string.Join(' ', x.Address, x.Country)));
+            }
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerManager logger)
         {
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
 
+            app.ConfigureExceptionHandler(logger);
             app.UseHttpsRedirection();
             app.UseHsts();
             app.UseStaticFiles();
