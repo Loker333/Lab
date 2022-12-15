@@ -1,4 +1,4 @@
-﻿using Contracts;
+using Contracts;
 using Entities;
 using Entities.Models;
 using System;
@@ -22,6 +22,12 @@ namespace Repository
             employee.CompanyId = companyId;
             Create(employee);
         }
+ master
+        public IEnumerable<Employee> GetEmployees(Guid companyId, bool trackChanges) =>
+        FindByCondition(e => e.CompanyId.Equals(companyId), trackChanges).OrderBy(e => e.Name);
+        public Employee GetEmployee(Guid companyId, Guid id, bool trackChanges) =>
+        FindByCondition(e => e.CompanyId.Equals(companyId) && e.Id.Equals(id),trackChanges).SingleOrDefault();
+=======
         public void DeleteEmployee(Employee employee)
         {
             Delete(employee);
@@ -29,5 +35,6 @@ namespace Repository
         public IEnumerable<Employee> GetEmployees(Guid companyId, bool trackChanges) =>
         FindByCondition(e => e.CompanyId.Equals(companyId), trackChanges) .OrderBy(e => e.Name);
 
+ LR_5
     }
 }
