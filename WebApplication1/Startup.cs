@@ -18,6 +18,7 @@ using AutoMapper;
 using Entities.Models;
 using Entities;
 using Contracts;
+using Entities.DataTransferObjects;
 
 namespace WebApplication1
 {
@@ -55,6 +56,11 @@ namespace WebApplication1
                 CreateMap<Company, CompanyDto>()
                 .ForMember(c => c.FullAddress,
                 opt => opt.MapFrom(x => string.Join(' ', x.Address, x.Country)));
+ master
+=======
+                CreateMap<CompanyForCreationDto, Company>();
+                CreateMap<EmployeeForCreationDto, Employee>();
+ LR_5
                 CreateMap<Employee, EmployeeDto>();
             }
         }

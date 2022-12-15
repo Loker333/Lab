@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using Contracts;
 using Entities;
+using Entities.DataTransferObjects;
+using Entities.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -10,15 +12,15 @@ using System.Threading.Tasks;
 
 namespace WebApplication1.Controllers
 {
-    [Route("api/pizzerias")]
+    [Route("api/[controller]")]
     [ApiController]
-    public class PizzeriasController : ControllerBase
+    public class PizzeriaController : ControllerBase
     {
         private readonly IRepositoryManager _repository;
         private readonly ILoggerManager _logger;
         private readonly IMapper _mapper;
 
-        public PizzeriasController(IRepositoryManager repository, ILoggerManager
+        public PizzeriaController(IRepositoryManager repository, ILoggerManager
         logger, IMapper mapper)
         {
             _repository = repository;
@@ -26,12 +28,49 @@ namespace WebApplication1.Controllers
             _mapper = mapper;
         }
 
-        [HttpGet]
-        public IActionResult GetPizzerias()
+        [HttpPost]
+        public IActionResult CreatePizzeriaForMenu(Guid menuId, [FromBody] PizzeriaForCreationDto pizzeria)
         {
-            var pizzerias = _repository.Pizzeria.GetAllPizzerias(trackChanges: false);
-            var pizzeriasDto = _mapper.Map<IEnumerable<PizzeriaDto>>(pizzerias);
-            return Ok(pizzeriasDto);
+            if (pizzeria == null)
+            {
+                _logger.LogError("PizzeriaForCreationDto object sent from client is null.");
+                return BadRequest("PizzeriaForCreationDto object is null");
+            }
+            var menu = _repository.Menu.GetMenu(menuId, trackChanges: false);
+            if (menu == null)
+            {
+                _logger.LogInfo($"Menu with id: {menuId} doesn't exist in the database.");
+                return NotFound();
+            }
+            var pizzeriaEntity = _mapper.Map<Pizzeria>(pizzeria);
+            _repository.Pizzeria.CreatePizzeriaForMenu(menuId, pizzeriaEntity);
+            _repository.Save();
+            var pizzeriaToReturn = _mapper.Map<PizzeriaDto>(pizzeriaEntity);
+            return CreatedAtRoute("GetPizzeriaForMenu", new
+            {
+                menuId,
+                id = pizzeriaToReturn.Id
+            }, pizzeriaToReturn);
+        }
+        [HttpGet("{id}")]
+        public IActionResult GetPizzeriaForMenu(Guid menuId, Guid id)
+        {
+            var menu = _repository.Menu.GetMenu(menuId, trackChanges: false);
+            if (menu == null)
+            {
+                _logger.LogInfo($"Menu with id: {menuId} doesn't exist in the database.");
+                return NotFound();
+            }
+            var pizzeriaDb = _repository.Pizzeria.GetPizzeria(menuId, id,
+           trackChanges:
+            false);
+            if (pizzeriaDb == null)
+            {
+                _logger.LogInfo($"Pizzeria with id: {id} doesn't exist in the database.");
+                return NotFound();
+            }
+            var pizzeria = _mapper.Map<PizzeriaDto>(pizzeriaDb);
+            return Ok(pizzeria);
         }
     }
 }

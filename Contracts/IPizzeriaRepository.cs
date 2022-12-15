@@ -7,6 +7,9 @@ namespace Contracts
 {
     public interface IPizzeriaRepository
     {
-        IEnumerable<Pizzeria> GetAllPizzerias(bool trackChanges);
+        IEnumerable<Pizzeria> GetPizzerias(Guid menuId, bool trackChanges);
+        Pizzeria GetPizzeria(Guid menuId, Guid id, bool trackChanges);
+        void CreatePizzeriaForMenu(Guid menuId, Pizzeria pizzeria);
+        void DeletePizzeria(Pizzeria pizzeria);
     }
 }

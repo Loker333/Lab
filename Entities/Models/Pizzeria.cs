@@ -18,5 +18,7 @@ namespace Entities.Models
         public string Address { get; set; }
         public string Country { get; set; }
         public ICollection<Menu> Menus { get; set; }
+        public Guid MenuId { get; set; }
+        public Menu Menu { get; set; }
     }
 }

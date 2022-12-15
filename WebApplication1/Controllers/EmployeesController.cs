@@ -1,6 +1,7 @@
-﻿using AutoMapper;
+using AutoMapper;
 using Contracts;
 using Entities;
+master
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -8,20 +9,68 @@ using System;
 namespace WebApplication1.Controllers
 {
     [Route("api/companies/{companyId}/employees")]
+
+using Entities.DataTransferObjects;
+using Entities.Models;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+
+namespace WebApplication1.Controllers
+{
+    [Route("api/[controller]")]
+ LR_5
     [ApiController]
     public class EmployeesController : ControllerBase
     {
         private readonly IRepositoryManager _repository;
         private readonly ILoggerManager _logger;
         private readonly IMapper _mapper;
+ master
         public EmployeesController(IRepositoryManager repository, ILoggerManager
        logger,
         IMapper mapper)
+=======
+
+        public EmployeesController(IRepositoryManager repository, ILoggerManager
+        logger, IMapper mapper)
+ LR_5
         {
             _repository = repository;
             _logger = logger;
             _mapper = mapper;
         }
+ master
+=======
+
+        [HttpPost]
+        public IActionResult CreateEmployeeForCompany(Guid companyId, [FromBody] EmployeeForCreationDto employee)
+        {
+            if (employee == null)
+            {
+                _logger.LogError("EmployeeForCreationDto object sent from client is null.");
+            return BadRequest("EmployeeForCreationDto object is null");
+            }
+            var company = _repository.Company.GetCompany(companyId, trackChanges: false);
+            if (company == null)
+            {
+                _logger.LogInfo($"Company with id: {companyId} doesn't exist in the database.");
+            return NotFound();
+            }
+            var employeeEntity = _mapper.Map<Employee>(employee);
+            _repository.Employee.CreateEmployeeForCompany(companyId, employeeEntity);
+            _repository.Save();
+            var employeeToReturn = _mapper.Map<EmployeeDto>(employeeEntity);
+            return CreatedAtRoute("GetEmployeeForCompany", new
+            {
+                companyId,
+                id = employeeToReturn.Id
+            }, employeeToReturn);
+        }
+ LR_5
         [HttpGet("{id}")]
         public IActionResult GetEmployeeForCompany(Guid companyId, Guid id)
         {
