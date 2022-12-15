@@ -1,15 +1,6 @@
-using AutoMapper;
+﻿using AutoMapper;
 using Contracts;
 using Entities;
-master
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using System;
-
-namespace WebApplication1.Controllers
-{
-    [Route("api/companies/{companyId}/employees")]
-
 using Entities.DataTransferObjects;
 using Entities.Models;
 using Microsoft.AspNetCore.Http;
@@ -22,29 +13,20 @@ using System.Threading.Tasks;
 namespace WebApplication1.Controllers
 {
     [Route("api/[controller]")]
- LR_5
     [ApiController]
     public class EmployeesController : ControllerBase
     {
         private readonly IRepositoryManager _repository;
         private readonly ILoggerManager _logger;
         private readonly IMapper _mapper;
- master
-        public EmployeesController(IRepositoryManager repository, ILoggerManager
-       logger,
-        IMapper mapper)
-=======
 
         public EmployeesController(IRepositoryManager repository, ILoggerManager
         logger, IMapper mapper)
- LR_5
         {
             _repository = repository;
             _logger = logger;
             _mapper = mapper;
         }
- master
-=======
 
         [HttpPost]
         public IActionResult CreateEmployeeForCompany(Guid companyId, [FromBody] EmployeeForCreationDto employee)
@@ -70,7 +52,6 @@ namespace WebApplication1.Controllers
                 id = employeeToReturn.Id
             }, employeeToReturn);
         }
- LR_5
         [HttpGet("{id}")]
         public IActionResult GetEmployeeForCompany(Guid companyId, Guid id)
         {
