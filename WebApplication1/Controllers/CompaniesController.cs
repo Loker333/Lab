@@ -30,21 +30,6 @@ namespace WebApplication1.Controllers
             _mapper = mapper;
         }
 
- master
-        [HttpGet]
-        public IActionResult GetEmployeesForCompany(Guid companyId)
-        {
-            var company = _repository.Company.GetCompany(companyId, trackChanges: false);
-            if (company == null)
-            {
-                _logger.LogInfo($"Company with id: {companyId} doesn't exist in the database.");
-            return NotFound();
-            }
-            var employeesFromDb = _repository.Employee.GetEmployees(companyId,
-            trackChanges: false);
-            var employeesDto = _mapper.Map<IEnumerable<EmployeeDto>>(employeesFromDb);
-            return Ok(employeesDto);
-=======
         [HttpPost]
         public IActionResult CreateCompany([FromBody] CompanyForCreationDto company)
         {
@@ -102,7 +87,6 @@ namespace WebApplication1.Controllers
             var ids = string.Join(",", companyCollectionToReturn.Select(c => c.Id));
             return CreatedAtRoute("CompanyCollection", new { ids },
             companyCollectionToReturn);
- LR_5
         }
     }
 }
