@@ -1,4 +1,5 @@
-﻿using Entities.Models;
+﻿using Entities.DataTransferObjects;
+using Entities.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -11,5 +12,6 @@ namespace Contracts
         Employee GetEmployee(Guid companyId, Guid id, bool trackChanges);
         void CreateEmployeeForCompany(Guid companyId, Employee employee);
         void DeleteEmployee(Employee employee);
+        
     }
 }
