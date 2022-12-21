@@ -21,5 +21,9 @@ namespace Repository
             FindByCondition(x => ids.Contains(x.Id), trackChanges).ToList();
         public void CreateMenu(Menu menu) => Create(menu);
         public Menu GetMenu(Guid menuId, bool trackChanges) => FindByCondition(c => c.Id.Equals(menuId), trackChanges).SingleOrDefault();
+        public void DeleteMenu(Menu menu)
+        {
+            Delete(menu);
+        }
     }
 }

@@ -11,5 +11,6 @@ namespace Contracts
         Menu GetMenu(Guid menuId, bool trackChanges);
         void CreateMenu(Menu menu);
         IEnumerable<Menu> GetByIds(IEnumerable<Guid> ids, bool trackChanges);
+        void DeleteMenu(Menu menu);
     }
 }
