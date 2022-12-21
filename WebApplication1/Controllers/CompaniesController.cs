@@ -88,5 +88,25 @@ namespace WebApplication1.Controllers
             return CreatedAtRoute("CompanyCollection", new { ids },
             companyCollectionToReturn);
         }
+        [HttpDelete("{id}")]
+        [ServiceFilter(typeof(ValidateCompanyExistsAttribute))]
+        public async Task<IActionResult> DeleteCompany(Guid id)
+        {
+            var company = HttpContext.Items["company"] as Company;
+            _repository.Company.DeleteCompany(company);
+            await _repository.SaveAsync();
+            return NoContent();
+        }
+
+        [HttpPut("{id}")]
+        [ServiceFilter(typeof(ValidationFilterAttribute))]
+        [ServiceFilter(typeof(ValidateCompanyExistsAttribute))]
+        public async Task<IActionResult> UpdateCompany(Guid id, [FromBody] CompanyForUpdateDto company)
+        {
+            var companyEntity = HttpContext.Items["company"] as Company;
+            _mapper.Map(company, companyEntity);
+            await _repository.SaveAsync();
+            return NoContent();
+        }
     }
 }

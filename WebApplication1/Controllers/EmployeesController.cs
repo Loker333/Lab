@@ -72,5 +72,48 @@ namespace WebApplication1.Controllers
             var employee = _mapper.Map<EmployeeDto>(employeeDb);
             return Ok(employee);
         }
+        [HttpDelete("{id}")]
+        [ServiceFilter(typeof(ValidateEmployeeForCompanyExistsAttribute))]
+        public async Task<IActionResult> DeleteEmployeeForCompany(Guid companyId, Guid id)
+        {
+            var employeeForCompany = HttpContext.Items["employee"] as Employee;
+            _repository.Employee.DeleteEmployee(employeeForCompany);
+            await _repository.SaveAsync();
+            return NoContent();
+        }
+
+        [HttpPut("{id}")]
+        [ServiceFilter(typeof(ValidateEmployeeForCompanyExistsAttribute))]
+        [ServiceFilter(typeof(ValidationFilterAttribute))]
+        public async Task<IActionResult> UpdateEmployeeForCompany(Guid companyId, Guid id, [FromBody] EmployeeForUpdateDto employee)
+        {
+            var employeeEntity = HttpContext.Items["employee"] as Employee;
+            _mapper.Map(employee, employeeEntity);
+            await _repository.SaveAsync();
+            return NoContent();
+        }
+
+        [HttpPatch("{id}")]
+        [ServiceFilter(typeof(ValidateEmployeeForCompanyExistsAttribute))]
+        public async Task<IActionResult> PartiallyUpdateEmployeeForCompany(Guid companyId, Guid id, [FromBody] JsonPatchDocument<EmployeeForUpdateDto> patchDoc)
+        {
+            if (patchDoc == null)
+            {
+                _logger.LogError("patchDoc object sent from client is null.");
+                return BadRequest("patchDoc object is null");
+            }
+            var employeeEntity = HttpContext.Items["employee"] as Employee;
+            var employeeToPatch = _mapper.Map<EmployeeForUpdateDto>(employeeEntity);
+            patchDoc.ApplyTo(employeeToPatch, ModelState);
+            TryValidateModel(employeeToPatch);
+            if (!ModelState.IsValid)
+            {
+                _logger.LogError("Invalid model state for the patch document");
+                return UnprocessableEntity(ModelState);
+            }
+            _mapper.Map(employeeToPatch, employeeEntity);
+            await _repository.SaveAsync();
+            return NoContent();
+        }
     }
 }
