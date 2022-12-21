@@ -43,7 +43,10 @@ namespace WebApplication1
             services.ConfigureRepositoryManager();
             services.AddAutoMapper(typeof(Startup));
             services.AddControllers();
-            
+            services.Configure<ApiBehaviorOptions>(options =>
+            {
+                options.SuppressModelStateInvalidFilter = true;
+            });
         }
 
         public class MappingProfile : Profile
