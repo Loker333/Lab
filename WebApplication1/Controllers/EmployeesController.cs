@@ -37,6 +37,11 @@ namespace WebApplication1.Controllers
                 _logger.LogError("EmployeeForCreationDto object sent from client is null.");
             return BadRequest("EmployeeForCreationDto object is null");
             }
+            if (!ModelState.IsValid)
+            {
+                _logger.LogError("Invalid model state for the EmployeeForUpdateDto object");
+                return UnprocessableEntity(ModelState);
+            }
             var company = _repository.Company.GetCompany(companyId, trackChanges: false);
             if (company == null)
             {
@@ -47,6 +52,11 @@ namespace WebApplication1.Controllers
             _repository.Employee.CreateEmployeeForCompany(companyId, employeeEntity);
             _repository.Save();
             var employeeToReturn = _mapper.Map<EmployeeDto>(employeeEntity);
+            if (!ModelState.IsValid)
+            {
+                _logger.LogError("Invalid model state for the EmployeeForCreationDto object");
+ return UnprocessableEntity(ModelState);
+            }
             return CreatedAtRoute("GetEmployeeForCompany", new
             {
                 companyId,
@@ -71,7 +81,9 @@ namespace WebApplication1.Controllers
             return NotFound();
             }
             var employee = _mapper.Map<EmployeeDto>(employeeDb);
+
             return Ok(employee);
+
         }
         [HttpDelete("{id}")]
 

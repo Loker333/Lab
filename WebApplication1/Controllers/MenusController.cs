@@ -14,7 +14,7 @@ using WebApplication1.ModelBinders;
 
 namespace WebApplication1.Controllers
 {
-    [Route("api/companies/{companyId}/employees")]
+    [Route("api/companies/{menuId}/employees")]
     [ApiController]
     public class MenusController : ControllerBase
     {
@@ -88,15 +88,38 @@ namespace WebApplication1.Controllers
             return CreatedAtRoute("MenuCollection", new { ids },
             menuCollectionToReturn);
         }
+
+        [HttpGet]
+        public async Task<IActionResult> GetMenu()
+        {
+            var menu = await _repository.Menu.GetAllmenuAsync(trackChanges: false);
+            var menuDto = _mapper.Map<IEnumerable<MenuDto>>(menu);
+            return Ok(menuDto);
+        }
+
+        [HttpGet("{id}", Name = "MenuById")]
+        public async Task<IActionResult> GetMenu(Guid id)
+        {
+            var menu = await _repository.Menu.GetMenuAsync(id, trackChanges: false);
+
         [HttpDelete("{id}")]
         public IActionResult DeleteMenu(Guid id)
         {
             var menu = _repository.Menu.GetMenu(id, trackChanges: false);
+
             if (menu == null)
             {
                 _logger.LogInfo($"Menu with id: {id} doesn't exist in the database.");
                 return NotFound();
             }
+
+            else
+            {
+                var menuDto = _mapper.Map<MenuDto>(menu);
+                return Ok(menuDto);
+            }
+        }
+
             _repository.Menu.DeleteMenu(menu);
             _repository.Save();
             return NoContent();
@@ -119,6 +142,7 @@ namespace WebApplication1.Controllers
             _repository.Save();
             return NoContent();
         }
+
 
     }
 }

@@ -42,6 +42,13 @@ namespace WebApplication1
             services.ConfigureSqlContext(Configuration);
             services.ConfigureRepositoryManager();
             services.AddAutoMapper(typeof(Startup));
+
+            services.AddControllers();
+            services.Configure<ApiBehaviorOptions>(options =>
+            {
+                options.SuppressModelStateInvalidFilter = true;
+            });
+
             services.AddControllers(config =>
             {
                 config.RespectBrowserAcceptHeader = true;
@@ -50,6 +57,7 @@ namespace WebApplication1
             .AddNewtonsoftJson()
             .AddXmlDataContractSerializerFormatters()
             .AddCustomCSVFormatter();
+
         }
 
         public class MappingProfile : Profile
