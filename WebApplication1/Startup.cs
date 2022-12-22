@@ -42,11 +42,22 @@ namespace WebApplication1
             services.ConfigureSqlContext(Configuration);
             services.ConfigureRepositoryManager();
             services.AddAutoMapper(typeof(Startup));
+
             services.AddControllers();
             services.Configure<ApiBehaviorOptions>(options =>
             {
                 options.SuppressModelStateInvalidFilter = true;
             });
+
+            services.AddControllers(config =>
+            {
+                config.RespectBrowserAcceptHeader = true;
+                config.ReturnHttpNotAcceptable = true;
+            })
+            .AddNewtonsoftJson()
+            .AddXmlDataContractSerializerFormatters()
+            .AddCustomCSVFormatter();
+
         }
 
         public class MappingProfile : Profile
@@ -59,6 +70,8 @@ namespace WebApplication1
                 CreateMap<CompanyForCreationDto, Company>();
                 CreateMap<EmployeeForCreationDto, Employee>();
                 CreateMap<Employee, EmployeeDto>();
+                CreateMap<EmployeeForUpdateDto, Employee>().ReverseMap();
+                CreateMap<CompanyForUpdateDto, Company>();
             }
         }
 

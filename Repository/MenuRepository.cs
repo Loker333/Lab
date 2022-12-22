@@ -23,6 +23,7 @@ namespace Repository
             FindByCondition(x => ids.Contains(x.Id), trackChanges).ToList();
         public void CreateMenu(Menu menu) => Create(menu);
         public Menu GetMenu(Guid menuId, bool trackChanges) => FindByCondition(c => c.Id.Equals(menuId), trackChanges).SingleOrDefault();
+
         public async Task<IEnumerable<Menu>> GetAllMenuAsync(bool trackChanges)
         => await FindAll(trackChanges)
         .OrderBy(c => c.Name)
@@ -34,5 +35,11 @@ namespace Repository
         trackChanges) =>
          await FindByCondition(x => ids.Contains(x.Id), trackChanges)
          .ToListAsync();
+
+        public void DeleteMenu(Menu menu)
+        {
+            Delete(menu);
+        }
+
     }
 }

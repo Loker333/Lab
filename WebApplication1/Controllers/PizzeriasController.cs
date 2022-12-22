@@ -72,5 +72,53 @@ namespace WebApplication1.Controllers
             var pizzeria = _mapper.Map<PizzeriaDto>(pizzeriaDb);
             return Ok(pizzeria);
         }
+        [HttpDelete("{id}")]
+        public IActionResult DeletePizzeriaForMenu(Guid menuId, Guid id)
+        {
+            var menu = _repository.Menu.GetMenu(menuId, trackChanges: false);
+            if (menu == null)
+            {
+                _logger.LogInfo($"Menu with id: {menuId} doesn't exist in the database.");
+            return NotFound();
+            }
+            var pizzeriaForMenu = _repository.Pizzeria.GetPizzeria(menuId, id,
+            trackChanges: false);
+            if (pizzeriaForMenu == null)
+            {
+                _logger.LogInfo($"Pizzeria with id: {id} doesn't exist in the  database.");
+            return NotFound();
+            }
+            _repository.Pizzeria.DeletePizzeria(pizzeriaForMenu);
+            _repository.Save();
+            return NoContent();
+        }
+        [HttpPut("{id}")]
+        public IActionResult UpdatePizzeriaForMenu(Guid menuId, Guid id, [FromBody]
+        PizzeriaForUpdateDto pizzeria)
+        {
+            if (pizzeria == null)
+            {
+                _logger.LogError("PizzeriaForUpdateDto object sent from client is null.");
+            return BadRequest("PizzeriaForUpdateDto object is null");
+            }
+            var menu = _repository.Menu.GetMenu(menuId, trackChanges: false);
+            if (menu == null)
+            {
+                _logger.LogInfo($"Menu with id: {menuId} doesn't exist in the database.");
+            return NotFound();
+            }
+            var pizzeriaEntity = _repository.Pizzeria.GetPizzeria(menuId, id,
+           trackChanges:
+            true);
+            if (pizzeriaEntity == null)
+            {
+                _logger.LogInfo($"Pizzeria with id: {id} doesn't exist in the database.");
+            return NotFound();
+            }
+            _mapper.Map(pizzeria, pizzeriaEntity);
+            _repository.Save();
+            return NoContent();
+        }
+
     }
 }

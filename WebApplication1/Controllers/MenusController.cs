@@ -88,6 +88,7 @@ namespace WebApplication1.Controllers
             return CreatedAtRoute("MenuCollection", new { ids },
             menuCollectionToReturn);
         }
+
         [HttpGet]
         public async Task<IActionResult> GetMenu()
         {
@@ -100,16 +101,48 @@ namespace WebApplication1.Controllers
         public async Task<IActionResult> GetMenu(Guid id)
         {
             var menu = await _repository.Menu.GetMenuAsync(id, trackChanges: false);
+
+        [HttpDelete("{id}")]
+        public IActionResult DeleteMenu(Guid id)
+        {
+            var menu = _repository.Menu.GetMenu(id, trackChanges: false);
+
             if (menu == null)
             {
                 _logger.LogInfo($"Menu with id: {id} doesn't exist in the database.");
                 return NotFound();
             }
+
             else
             {
                 var menuDto = _mapper.Map<MenuDto>(menu);
                 return Ok(menuDto);
             }
         }
+
+            _repository.Menu.DeleteMenu(menu);
+            _repository.Save();
+            return NoContent();
+        }
+        [HttpPut("{id}")]
+        public IActionResult UpdateMenu(Guid id, [FromBody] MenuForUpdateDto menu)
+        {
+            if (menu == null)
+            {
+                _logger.LogError("MenuForUpdateDto object sent from client is null.");
+                return BadRequest("MenuForUpdateDto object is null");
+            }
+            var menuEntity = _repository.Menu.GetMenu(id, trackChanges: true);
+            if (menuEntity == null)
+            {
+                _logger.LogInfo($"Menu with id: {id} doesn't exist in the database.");
+                return NotFound();
+            }
+            _mapper.Map(menu, menuEntity);
+            _repository.Save();
+            return NoContent();
+        }
+
+
     }
 }
