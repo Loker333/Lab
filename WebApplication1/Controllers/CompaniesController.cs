@@ -89,6 +89,27 @@ namespace WebApplication1.Controllers
             companyCollectionToReturn);
         }
         [HttpDelete("{id}")]
+
+        [ServiceFilter(typeof(ValidateCompanyExistsAttribute))]
+        public async Task<IActionResult> DeleteCompany(Guid id)
+        {
+            var company = HttpContext.Items["company"] as Company;
+            _repository.Company.DeleteCompany(company);
+            await _repository.SaveAsync();
+            return NoContent();
+        }
+
+        [HttpPut("{id}")]
+        [ServiceFilter(typeof(ValidationFilterAttribute))]
+        [ServiceFilter(typeof(ValidateCompanyExistsAttribute))]
+        public async Task<IActionResult> UpdateCompany(Guid id, [FromBody] CompanyForUpdateDto company)
+        {
+            var companyEntity = HttpContext.Items["company"] as Company;
+            _mapper.Map(company, companyEntity);
+            await _repository.SaveAsync();
+            return NoContent();
+        }
+
         public IActionResult DeleteCompany(Guid id)
         {
             var company = _repository.Company.GetCompany(id, trackChanges: false);
@@ -119,6 +140,7 @@ namespace WebApplication1.Controllers
             _repository.Save();
             return NoContent();
         }
+
 
     }
 }
