@@ -19,6 +19,7 @@ using Entities.Models;
 using Entities;
 using Contracts;
 using Entities.DataTransferObjects;
+using WebApplication1.ActionFilters;
 
 namespace WebApplication1
 {
@@ -42,7 +43,10 @@ namespace WebApplication1
             services.ConfigureSqlContext(Configuration);
             services.ConfigureRepositoryManager();
             services.AddAutoMapper(typeof(Startup));
-
+            services.AddScoped<ValidateCompanyExistsAttribute>();
+            services.AddScoped<ValidateEmployeeForCompanyExistsAttribute>();
+            services.AddScoped<ValidationFilterAttribute>();
+            services.ConfigureVersioning();
             services.AddControllers();
             services.Configure<ApiBehaviorOptions>(options =>
             {
@@ -54,9 +58,8 @@ namespace WebApplication1
                 config.RespectBrowserAcceptHeader = true;
                 config.ReturnHttpNotAcceptable = true;
             })
-            .AddNewtonsoftJson()
-            .AddXmlDataContractSerializerFormatters()
-            .AddCustomCSVFormatter();
+            .AddXmlDataContractSerializerFormatters();
+
 
         }
 
