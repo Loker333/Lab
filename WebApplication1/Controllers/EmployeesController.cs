@@ -7,13 +7,13 @@ using Entities;
 using Entities.DataTransferObjects;
 using Entities.Models;
 using Entities.RequestFeatures;
-using LR_1.ActionFilters;
+using WebApplication1.ActionFilters;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using WebApplication1.ActionFilters;
 
-namespace LR_1.Controllers
+namespace WebApplication1.Controllers
 {
     [Route("api/companies/{companyId}/employees")]
     [ApiController]
@@ -33,6 +33,7 @@ namespace LR_1.Controllers
         }
 
         [HttpGet]
+        [HttpHead]
         public async Task<IActionResult> GetEmployeesForCompany(Guid companyId, [FromQuery] EmployeeParameters employeeParameters)
         {
             if (!employeeParameters.ValidAgeRange)
