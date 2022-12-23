@@ -1,12 +1,13 @@
-﻿using Contracts;
+﻿using System;
+using System.Linq;
+using System.Threading.Tasks;
+using Contracts;
 using Entities;
 using Entities.Models;
+using Entities.RequestFeatures;
+using Entities.RequestFeatures.MetaData;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Repository.Extensions;
 
 namespace Repository
 {
@@ -18,11 +19,14 @@ namespace Repository
 
         public async Task<PagedList<Employee>> GetEmployeesAsync(Guid companyId, EmployeeParameters employeeParameters, bool trackChanges)
         {
-            var employees = await FindByCondition(e => e.CompanyId.Equals(companyId) && (e.Age >= employeeParameters.MinAge && e.Age <= employeeParameters.MaxAge), trackChanges)
-                .OrderBy(e => e.Name)
+            var employees = await FindByCondition(e => e.CompanyId.Equals(companyId), trackChanges)
+                .FilterEmployees(employeeParameters.MinAge, employeeParameters.MaxAge)
+                .Search(employeeParameters.SearchTerm)
+                .Sort(employeeParameters.OrderBy)
                 .ToListAsync();
             return PagedList<Employee>
-                .ToPagedList(employees, employeeParameters.PageNumber, employeeParameters.PageSize);
+                .ToPagedList(employees, employeeParameters.PageNumber,
+            employeeParameters.PageSize);
         }
 
 
@@ -39,9 +43,5 @@ namespace Repository
         {
             Delete(employee);
         }
-
-        public IEnumerable<Employee> GetEmployees(Guid companyId, bool trackChanges) =>
-        FindByCondition(e => e.CompanyId.Equals(companyId), trackChanges) .OrderBy(e => e.Name);
-
     }
 }
