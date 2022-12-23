@@ -3,6 +3,7 @@ using Entities;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Repository
 {
@@ -13,6 +14,7 @@ namespace Repository
         private IEmployeeRepository _employeeRepository;
         private IPizzeriaRepository _pizzeriaRepository;
         private IMenuRepository _menuRepository;
+
         public RepositoryManager(RepositoryContext repositoryContext)
         {
             _repositoryContext = repositoryContext;
@@ -53,7 +55,7 @@ namespace Repository
                 return _menuRepository;
             }
         }
-        public void Save() => _repositoryContext.SaveChanges();
+        public Task SaveAsync() => _repositoryContext.SaveChangesAsync();
 
 
     }
